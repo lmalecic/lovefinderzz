@@ -1,3 +1,9 @@
 <resources>
     <string name="app_name">Lovefinderzz</string>
+    <string name="home_title">Welcome to Lovefinderzz!</string>
+    <string name="home_body">Yes, we developed an app</string>
+    <string name="favorites_title">Favorites</string>
+    <string name="characters_title">Characters</string>
+    <string name="locations_title">Locations</string>
+    <string name="episodes_title">Episodes</string>
 </resources>

@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -22,12 +23,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Devices.PHONE
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.tooling.preview.PreviewScreenSizes
+import androidx.compose.ui.unit.dp
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
+import com.lmalecic.lovefinderzz.view.AppRoute
+import com.lmalecic.lovefinderzz.view.CharactersRoute
+import com.lmalecic.lovefinderzz.view.CharactersView
+import com.lmalecic.lovefinderzz.view.EpisodesRoute
+import com.lmalecic.lovefinderzz.view.EpisodesView
+import com.lmalecic.lovefinderzz.view.FavoritesRoute
+import com.lmalecic.lovefinderzz.view.FavoritesView
+import com.lmalecic.lovefinderzz.view.HomeRoute
 import com.lmalecic.lovefinderzz.view.HomeView
+import com.lmalecic.lovefinderzz.view.LocationsRoute
+import com.lmalecic.lovefinderzz.view.LocationsView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -45,6 +58,7 @@ class MainActivity : ComponentActivity() {
 @Preview(name = "Phone", device = PHONE, showSystemUi = true)
 @Composable
 fun LovefinderzzApp() {
+    val navigationController = rememberNavController()
     var currentDestination by rememberSaveable { mutableStateOf(AppDestinations.HOME) }
 
     NavigationSuiteScaffold(
@@ -56,26 +70,51 @@ fun LovefinderzzApp() {
         ),
         navigationSuiteItems = {
             AppDestinations.entries.forEach {
+                val selected = it == currentDestination
+
                 item(
                     icon = {
                         Icon(
-                            painterResource(it.icon),
+                            painterResource(if (selected) it.selectedIcon ?: it.icon else it.icon),
                             contentDescription = it.label
                         )
                     },
                     label = { Text(it.label) },
-                    selected = it == currentDestination,
-                    onClick = { currentDestination = it }
+                    selected = selected,
+                    onClick = {
+                        currentDestination = it
+                        navigationController.navigate(it.route)
+                    }
                 )
             }
         }
     ) {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            HomeView(modifier = Modifier.padding(innerPadding))
-//            Greeting(
-//                name = "Android",
-//                modifier = Modifier.padding(innerPadding)
-//            )
+        NavHost(
+            navController = navigationController,
+            startDestination = AppDestinations.entries.first().route,
+            modifier = Modifier.fillMaxSize()
+                .statusBarsPadding()
+                .padding(24.dp)
+        ) {
+            composable<HomeRoute> {
+                HomeView()
+            }
+
+            composable<FavoritesRoute> {
+                FavoritesView()
+            }
+
+            composable<CharactersRoute> {
+                CharactersView()
+            }
+
+            composable<LocationsRoute> {
+                LocationsView()
+            }
+
+            composable<EpisodesRoute> {
+                EpisodesView()
+            }
         }
     }
 }
@@ -83,9 +122,37 @@ fun LovefinderzzApp() {
 enum class AppDestinations(
     val label: String,
     val icon: Int,
+    val selectedIcon: Int?,
+    val route: AppRoute
 ) {
-    HOME("Home", R.drawable.ic_home),
-    FAVORITES("Favorites", R.drawable.ic_favorite),
-    CHARACTERS("Characters", R.drawable.ic_favorite),
-    PROFILE("Profile", R.drawable.ic_account_box),
+    HOME(
+        "Home",
+        R.drawable.ic_outline_home,
+        R.drawable.ic_home,
+        HomeRoute,
+    ),
+    FAVORITES(
+        "Favorites",
+        R.drawable.ic_outline_favorites,
+        R.drawable.ic_favorites,
+        FavoritesRoute
+    ),
+    CHARACTERS(
+        "Characters",
+        R.drawable.ic_outline_characters,
+        R.drawable.ic_characters,
+        CharactersRoute
+    ),
+    LOCATIONS(
+        "Locations",
+        R.drawable.ic_outline_locations,
+        R.drawable.ic_locations,
+        LocationsRoute
+    ),
+    EPISODES(
+        "Episodes",
+        R.drawable.ic_outline_episodes,
+        R.drawable.ic_episodes,
+        EpisodesRoute
+    )
 }

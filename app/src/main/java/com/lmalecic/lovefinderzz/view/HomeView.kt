@@ -1,13 +1,10 @@
 package com.lmalecic.lovefinderzz.view
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -15,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -24,8 +22,11 @@ import com.lmalecic.lovefinderzz.R
 import com.lmalecic.lovefinderzz.handler.getGifEnabledLoader
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.em
+import com.lmalecic.lovefinderzz.ui.theme.Typography
+import kotlinx.serialization.Serializable
+
+@Serializable
+data object HomeRoute: AppRoute
 
 @Composable
 fun HomeView(modifier: Modifier = Modifier) {
@@ -38,8 +39,8 @@ fun HomeView(modifier: Modifier = Modifier) {
             .padding(32.dp, 24.dp)
     ) {
         Text(
-            text = "Welcome to Lovefinderzz!",
-            style = TextStyle(fontWeight = FontWeight.Bold, fontSize = 6.em)
+            text = stringResource(R.string.home_title),
+            style = Typography.titleLarge
         )
 
         AsyncImage(
@@ -53,7 +54,7 @@ fun HomeView(modifier: Modifier = Modifier) {
         )
 
         Text(
-            text = "Yes, we developed an app.",
+            text = stringResource(R.string.home_body),
             style = TextStyle(fontStyle = FontStyle.Italic)
         )
     }
