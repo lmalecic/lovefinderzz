@@ -5,6 +5,9 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.lmalecic.lovefinderzz.dao.CharacterDao
+import com.lmalecic.lovefinderzz.dao.EpisodeDao
+import com.lmalecic.lovefinderzz.dao.LocationDao
 import com.lmalecic.lovefinderzz.dao.SyncDao
 import com.lmalecic.lovefinderzz.entity.CharacterEntity
 import com.lmalecic.lovefinderzz.entity.CharacterEpisodeCrossReference
@@ -25,6 +28,9 @@ import com.lmalecic.lovefinderzz.entity.LocationEntity
 abstract class RickAndMortyDatabase : RoomDatabase() {
 
     abstract fun syncDao(): SyncDao
+    abstract fun characterDao(): CharacterDao
+    abstract fun locationDao(): LocationDao
+    abstract fun episodeDao(): EpisodeDao
 
     companion object {
         @Volatile
