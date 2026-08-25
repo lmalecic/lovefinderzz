@@ -1,4 +1,4 @@
-package com.lmalecic.lovefinderzz.view
+package com.lmalecic.lovefinderzz.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -22,6 +22,7 @@ import com.lmalecic.lovefinderzz.R
 import com.lmalecic.lovefinderzz.handler.getGifEnabledLoader
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import androidx.compose.ui.text.TextStyle
+import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import kotlinx.serialization.Serializable
 
@@ -29,7 +30,7 @@ import kotlinx.serialization.Serializable
 data object HomeRoute: AppRoute
 
 @Composable
-fun HomeView(modifier: Modifier = Modifier) {
+fun HomeContent(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
     Column(
@@ -62,8 +63,8 @@ fun HomeView(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun HomeViewPreview() {
+fun HomeContentPreview() {
     LovefinderzzTheme {
-        HomeView()
+        HomeContent()
     }
 }

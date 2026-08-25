@@ -1,4 +1,4 @@
-package com.lmalecic.lovefinderzz.view
+package com.lmalecic.lovefinderzz.ui.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,20 +8,21 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.lmalecic.lovefinderzz.R
+import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import kotlinx.serialization.Serializable
 
 @Serializable
-data object EpisodesRoute: AppRoute
+data object FavoritesRoute: AppRoute
 
 @Composable
-fun EpisodesView(modifier: Modifier = Modifier) {
+fun FavoritesContent(modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.fillMaxSize()
     ) {
         Text(
-            text = stringResource(R.string.episodes_title),
+            text = stringResource(R.string.favorites_title),
             style = Typography.titleLarge
         )
     }
@@ -29,8 +30,8 @@ fun EpisodesView(modifier: Modifier = Modifier) {
 
 @Preview(showBackground = true)
 @Composable
-fun EpisodesViewPreview() {
+fun FavoritesContentPreview() {
     LovefinderzzTheme {
-        EpisodesView()
+        FavoritesContent()
     }
 }

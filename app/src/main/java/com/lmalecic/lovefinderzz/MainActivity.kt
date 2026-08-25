@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.material3.adaptive.navigationsuite.NavigationSuiteDefaults
@@ -30,17 +29,20 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
-import com.lmalecic.lovefinderzz.view.AppRoute
-import com.lmalecic.lovefinderzz.view.CharactersRoute
-import com.lmalecic.lovefinderzz.view.CharactersView
-import com.lmalecic.lovefinderzz.view.EpisodesRoute
-import com.lmalecic.lovefinderzz.view.EpisodesView
-import com.lmalecic.lovefinderzz.view.FavoritesRoute
-import com.lmalecic.lovefinderzz.view.FavoritesView
-import com.lmalecic.lovefinderzz.view.HomeRoute
-import com.lmalecic.lovefinderzz.view.HomeView
-import com.lmalecic.lovefinderzz.view.LocationsRoute
-import com.lmalecic.lovefinderzz.view.LocationsView
+import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.screens.CharactersRoute
+import com.lmalecic.lovefinderzz.ui.screens.CharactersContent
+import com.lmalecic.lovefinderzz.ui.screens.CharactersScreen
+import com.lmalecic.lovefinderzz.ui.screens.EpisodesRoute
+import com.lmalecic.lovefinderzz.ui.screens.EpisodesContent
+import com.lmalecic.lovefinderzz.ui.screens.EpisodesScreen
+import com.lmalecic.lovefinderzz.ui.screens.FavoritesRoute
+import com.lmalecic.lovefinderzz.ui.screens.FavoritesContent
+import com.lmalecic.lovefinderzz.ui.screens.HomeRoute
+import com.lmalecic.lovefinderzz.ui.screens.HomeContent
+import com.lmalecic.lovefinderzz.ui.screens.LocationsRoute
+import com.lmalecic.lovefinderzz.ui.screens.LocationsContent
+import com.lmalecic.lovefinderzz.ui.screens.LocationsScreen
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -97,23 +99,23 @@ fun LovefinderzzApp() {
                 .padding(24.dp)
         ) {
             composable<HomeRoute> {
-                HomeView()
+                HomeContent()
             }
 
             composable<FavoritesRoute> {
-                FavoritesView()
+                FavoritesContent()
             }
 
             composable<CharactersRoute> {
-                CharactersView()
+                CharactersScreen()
             }
 
             composable<LocationsRoute> {
-                LocationsView()
+                LocationsScreen()
             }
 
             composable<EpisodesRoute> {
-                EpisodesView()
+                EpisodesScreen()
             }
         }
     }
