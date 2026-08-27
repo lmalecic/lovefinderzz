@@ -13,4 +13,6 @@ class LocationsViewModel(application: Application) : AndroidViewModel(applicatio
         .locationDao()
 
     val locations: Flow<List<LocationEntity>> = locationDao.observeAll()
+
+    fun observeDetails(locationId: Long) = locationDao.observeDetails(locationId)
 }

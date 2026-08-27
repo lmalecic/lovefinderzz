@@ -11,9 +11,8 @@ import androidx.preference.PreferenceManager
 import com.lmalecic.lovefinderzz.formatter.US_LONG_DATE
 import java.time.LocalDate
 
-fun <T : Enum<T>> Enum<T>.toTitleCase(): String {
-    return this.name.lowercase().replaceFirstChar { it.uppercase() }
-}
+fun <T : Enum<T>> Enum<T>.toTitleCase(): String =
+    this.name.lowercase().replaceFirstChar { it.uppercase() }
 
 fun String.parseUsLongDate(): LocalDate = LocalDate.parse(trim(), US_LONG_DATE)
 

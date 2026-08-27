@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 import androidx.room.Relation
 
 enum class CharacterStatus {
-    ALIVE, DEAD, UNKNOWN;
+    ALIVE, DEAD, UNKNOWN
 }
 
 enum class Gender {
@@ -42,10 +42,10 @@ data class CharacterEntity(
     val name: String,
     val status: CharacterStatus,
     val species: String,
-    val type: String?,
+    val type: String? = null,
     val gender: Gender,
-    val originLocationId: Long?,
-    val currentLocationId: Long?,
+    val originLocationId: Long? = null,
+    val currentLocationId: Long? = null,
     val imageUrl: String
 )
 

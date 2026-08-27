@@ -1,5 +1,6 @@
 package com.lmalecic.lovefinderzz.ui.screens
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
@@ -10,10 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.lmalecic.lovefinderzz.R
 import com.lmalecic.lovefinderzz.entity.LocationEntity
+import com.lmalecic.lovefinderzz.ui.components.LocationCard
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.Typography
@@ -24,34 +29,45 @@ import kotlinx.serialization.Serializable
 data object LocationsRoute: AppRoute
 
 @Composable
-fun LocationsScreen(viewModel: LocationsViewModel = viewModel()) {
+fun LocationsScreen(
+    viewModel: LocationsViewModel = viewModel(),
+    navController: NavHostController
+) {
     val locations by viewModel.locations.collectAsStateWithLifecycle(initialValue = emptyList())
 
     LocationsContent(
-        locations = locations
+        locations = locations,
+        navController = navController
     )
 }
 
 @Composable
 fun LocationsContent(
     locations: List<LocationEntity>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    navController: NavHostController
 ) {
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
             text = stringResource(R.string.locations_title),
             style = Typography.titleLarge
         )
 
-        LazyColumn {
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp)
+        ) {
             items(
                 items = locations,
                 key = { location -> location.id }
             ) { location ->
-                Text(
-                    text = location.name
+                LocationCard(
+                    location = location,
+                    onClick = {
+                        navController.navigate(LocationPagerRoute(location.id))
+                    }
                 )
             }
         }
@@ -63,7 +79,8 @@ fun LocationsContent(
 fun LocationsContentPreview() {
     LovefinderzzTheme {
         LocationsContent(
-            locations = emptyList()
+            locations = emptyList(),
+            navController = rememberNavController()
         )
     }
 }

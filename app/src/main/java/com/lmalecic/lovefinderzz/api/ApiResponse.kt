@@ -10,6 +10,6 @@ data class ApiResponseInfo(
 )
 
 data class ApiResponse<T>(
-    val info: ApiResponseInfo,
-    val results: List<T>
+    @SerializedName("info") val info: ApiResponseInfo,
+    @SerializedName("results") val results: List<T>
 )

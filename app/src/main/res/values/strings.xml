@@ -6,4 +6,13 @@
     <string name="characters_title">Characters</string>
     <string name="locations_title">Locations</string>
     <string name="episodes_title">Episodes</string>
+    <string name="retry">Retry</string>
+    <string name="no_internet_connection">No internet connection</string>
+    <string name="statusDetail">"Status"</string>
+    <string name="speciesDetail">Species</string>
+    <string name="typeDetail">Type</string>
+    <string name="genderDetail">Gender</string>
+    <string name="locationDetail">Location</string>
+    <string name="unknown">Unknown</string>
+    <string name="originDetail">Origin</string>
 </resources>

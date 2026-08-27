@@ -13,4 +13,6 @@ class CharactersViewModel(application: Application) : AndroidViewModel(applicati
         .characterDao()
 
     val characters: Flow<List<CharacterEntity>> = characterDao.observeAll()
+
+    fun observeDetails(characterId: Long) = characterDao.observeDetails(characterId)
 }
