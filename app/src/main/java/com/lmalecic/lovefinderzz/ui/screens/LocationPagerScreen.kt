@@ -138,7 +138,7 @@ fun LocationDetailsEmptyContent() {
 fun LocationDetailsContent(details: LocationDetails, navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 16.dp),
+        contentPadding = PaddingValues(bottom = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         item(key = "title") {

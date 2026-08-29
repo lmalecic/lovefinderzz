@@ -13,10 +13,11 @@ val Pink40 = Color(0xFF7D5260)
 val Pink200 = Color(0xFFF93D9B)
 val Pink30 = Color(0x26F93D9B)
 val Pink20 = Color(0x1AF93D9B)
-val LightPink30 = Color(0x26F197C4)
+val LightPink30 = Color(0xFFEFD7DD)
+val LightPink10 = Color(0xFFF3ECEC)
 
 val Red200 = Color(0xFFFF4470)
 val Green200 = Color(0xFF3DF99B)
-val OpaqueBlack16 = Color(0x14000000)
+val OpaqueBlack16 = Color(0x1A363636)
 
 val Grey200 = Color(0xFF818181)
