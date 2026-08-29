@@ -17,6 +17,7 @@ class LocationsViewModel(application: Application) : AndroidViewModel(applicatio
     val locations: Flow<List<LocationEntity>> = locationDao.observeAll()
 
     fun observeDetails(locationId: Long) = locationDao.observeDetails(locationId)
+
     fun setFavorite(locationId: Long, favorite: Boolean) {
         viewModelScope.launch {
             locationDao.setFavorite(locationId, favorite)

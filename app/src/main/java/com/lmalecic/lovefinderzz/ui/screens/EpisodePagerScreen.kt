@@ -12,13 +12,18 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,24 +79,51 @@ fun EpisodePagerScreen(
         pageCount = { episodes.size }
     )
 
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier.fillMaxSize()
-    ) { page ->
-        val episode = episodes[page]
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        floatingActionButton = {
+            val currentEpisode = episodes.getOrNull(pagerState.currentPage)
 
-        val detailsFlow = remember(episode.id) {
-            viewModel.observeDetails(episode.id)
-        }
+            if (currentEpisode != null) {
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.setFavorite(currentEpisode.id, !currentEpisode.favorite)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (currentEpisode.favorite) R.drawable.ic_favorites
+                            else R.drawable.ic_outline_favorites
+                        ),
+                        contentDescription = null
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        containerColor = Color.Transparent,
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding),
+            pageSpacing = 32.dp
+        ) { page ->
+            val episode = episodes[page]
 
-        val details by detailsFlow.collectAsStateWithLifecycle(
-            initialValue = null
-        )
+            val detailsFlow = remember(episode.id) {
+                viewModel.observeDetails(episode.id)
+            }
 
-        if (details == null) {
-            EpisodeDetailsEmptyContent()
-        } else {
-            EpisodeDetailsContent(details = details!!, navController = navController)
+            val details by detailsFlow.collectAsStateWithLifecycle(
+                initialValue = null
+            )
+
+            if (details == null) {
+                EpisodeDetailsEmptyContent()
+            } else {
+                EpisodeDetailsContent(details = details!!, navController = navController)
+            }
         }
     }
 }
