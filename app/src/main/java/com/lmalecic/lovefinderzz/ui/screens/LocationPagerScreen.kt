@@ -31,22 +31,14 @@ import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.lmalecic.lovefinderzz.R
-import com.lmalecic.lovefinderzz.entity.CharacterEntity
-import com.lmalecic.lovefinderzz.entity.CharacterStatus
-import com.lmalecic.lovefinderzz.entity.EpisodeDetails
-import com.lmalecic.lovefinderzz.entity.EpisodeEntity
-import com.lmalecic.lovefinderzz.entity.Gender
 import com.lmalecic.lovefinderzz.entity.LocationDetails
 import com.lmalecic.lovefinderzz.entity.LocationEntity
-import com.lmalecic.lovefinderzz.formatter.toLocalizedString
 import com.lmalecic.lovefinderzz.ui.components.CharacterCard
 import com.lmalecic.lovefinderzz.ui.components.Detail
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.viewmodel.LocationsViewModel
 import kotlinx.serialization.Serializable
-import java.time.LocalDate
-import java.time.format.FormatStyle
 
 @Serializable
 data class LocationPagerRoute(
@@ -128,6 +120,7 @@ fun LocationDetailsContent(details: LocationDetails, navController: NavControlle
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top = 8.dp)
             ) {
                 Detail(
                     labelText = "Dimension",

@@ -124,6 +124,7 @@ fun EpisodeDetailsContent(details: EpisodeDetails, navController: NavController)
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top = 8.dp)
             ) {
                 Detail(
                     labelText = "Episode",

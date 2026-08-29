@@ -23,4 +23,18 @@ interface LocationDao {
         LIMIT 1
     """)
     fun observeDetails(locationId: Long): Flow<LocationDetails?>
+
+    @Query("""
+        SELECT * FROM locations
+        WHERE favorite = 1
+        ORDER BY name COLLATE NOCASE
+    """)
+    fun observeFavorites(): Flow<List<LocationEntity>>
+
+    @Query("""
+        UPDATE locations
+        SET favorite = :favorite
+        WHERE id = :locationId
+    """)
+    suspend fun setFavorite(locationId: Long, favorite: Boolean)
 }

@@ -40,8 +40,6 @@ import com.lmalecic.lovefinderzz.ui.screens.EpisodePagerRoute
 import com.lmalecic.lovefinderzz.ui.screens.EpisodePagerScreen
 import com.lmalecic.lovefinderzz.ui.screens.EpisodesRoute
 import com.lmalecic.lovefinderzz.ui.screens.EpisodesScreen
-import com.lmalecic.lovefinderzz.ui.screens.FavoritesRoute
-import com.lmalecic.lovefinderzz.ui.screens.FavoritesContent
 import com.lmalecic.lovefinderzz.ui.screens.HomeRoute
 import com.lmalecic.lovefinderzz.ui.screens.HomeContent
 import com.lmalecic.lovefinderzz.ui.screens.LocationPagerRoute
@@ -62,7 +60,6 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-//@PreviewScreenSizes
 @Preview(name = "Phone", device = PHONE, showSystemUi = true)
 @Composable
 fun LovefinderzzApp() {
@@ -111,14 +108,10 @@ fun LovefinderzzApp() {
                 startDestination = AppDestinations.entries.first().route,
                 modifier = Modifier.fillMaxSize()
                     .statusBarsPadding()
-                    .padding(24.dp)
+                    .padding(24.dp, 12.dp, 24.dp, 0.dp)
             ) {
                 composable<HomeRoute> {
                     HomeContent()
-                }
-
-                composable<FavoritesRoute> {
-                    FavoritesContent()
                 }
 
                 composable<CharactersRoute> {
@@ -169,12 +162,6 @@ enum class AppDestinations(
         R.drawable.ic_outline_home,
         R.drawable.ic_home,
         HomeRoute,
-    ),
-    FAVORITES(
-        "Favorites",
-        R.drawable.ic_outline_favorites,
-        R.drawable.ic_favorites,
-        FavoritesRoute
     ),
     CHARACTERS(
         "Characters",

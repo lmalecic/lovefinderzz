@@ -23,4 +23,18 @@ interface EpisodeDao {
         LIMIT 1
     """)
     fun observeDetails(episodeId: Long): Flow<EpisodeDetails?>
+
+    @Query("""
+        SELECT * FROM episodes
+        WHERE favorite = 1
+        ORDER BY name COLLATE NOCASE
+    """)
+    fun observeFavorites(): Flow<List<EpisodeEntity>>
+
+    @Query("""
+        UPDATE episodes
+        SET favorite = :favorite
+        WHERE id = :episodeId
+    """)
+    suspend fun setFavorite(episodeId: Long, favorite: Boolean)
 }

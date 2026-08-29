@@ -18,13 +18,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.lmalecic.lovefinderzz.R
-import com.lmalecic.lovefinderzz.entity.EpisodeEntity
 import com.lmalecic.lovefinderzz.entity.LocationEntity
-import com.lmalecic.lovefinderzz.formatter.toLocalizedString
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.extendedColors
-import java.time.LocalDate
-import java.time.format.FormatStyle
 
 @Composable
 fun LocationCard(

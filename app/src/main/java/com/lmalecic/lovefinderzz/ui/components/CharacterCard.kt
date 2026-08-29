@@ -99,7 +99,7 @@ fun CharacterCard(
     }
 
     val cardModifier = Modifier.fillMaxWidth()
-        .height(96.dp)
+        .height(80.dp)
 
     val cardColors = CardDefaults.cardColors(
         containerColor = MaterialTheme.colorScheme.surfaceContainer

@@ -1,5 +1,6 @@
 package com.lmalecic.lovefinderzz.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.Index
@@ -17,7 +18,9 @@ data class LocationEntity(
     @PrimaryKey val id: Long,
     val name: String,
     val type: String,
-    val dimension: String
+    val dimension: String,
+    @ColumnInfo(defaultValue = "0")
+    val favorite: Boolean = false
 )
 
 data class LocationDetails(

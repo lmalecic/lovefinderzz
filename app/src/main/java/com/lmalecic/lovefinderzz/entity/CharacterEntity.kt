@@ -1,5 +1,6 @@
 package com.lmalecic.lovefinderzz.entity
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -46,7 +47,9 @@ data class CharacterEntity(
     val gender: Gender,
     val originLocationId: Long? = null,
     val currentLocationId: Long? = null,
-    val imageUrl: String
+    val imageUrl: String,
+    @ColumnInfo(defaultValue = "0")
+    val favorite: Boolean = false,
 )
 
 data class CharacterDetails(

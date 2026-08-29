@@ -8,21 +8,16 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,10 +26,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lmalecic.lovefinderzz.LovefinderzzApp
 import com.lmalecic.lovefinderzz.R
+import com.lmalecic.lovefinderzz.framework.DelayedContent
+import com.lmalecic.lovefinderzz.framework.callDelayed
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import com.lmalecic.lovefinderzz.viewmodel.StartupState
 import com.lmalecic.lovefinderzz.viewmodel.StartupViewModel
+import kotlinx.coroutines.Runnable
+import kotlin.time.Duration.Companion.seconds
 
 @Composable
 fun StartupScreen(viewModel: StartupViewModel = viewModel()) {
@@ -43,7 +42,13 @@ fun StartupScreen(viewModel: StartupViewModel = viewModel()) {
     when (val currentState = state) {
         StartupState.Checking, StartupState.Importing -> ImportScreen()
         StartupState.NoInternet -> NoInternetContent(onRetry = viewModel::retry)
-        StartupState.Ready -> LovefinderzzApp()
+        StartupState.Ready -> /* DelayedContent(
+            delay = 1.5.seconds,
+            waitingContent = { ImportScreen() }
+        ) {
+            LovefinderzzApp()
+        } */
+            LovefinderzzApp()
 
         is StartupState.Failed -> ImportErrorScreen(
             message = currentState.message,

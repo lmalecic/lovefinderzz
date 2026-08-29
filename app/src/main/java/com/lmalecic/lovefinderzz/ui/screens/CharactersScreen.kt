@@ -59,7 +59,7 @@ fun CharactersContent(
         )
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             items(
                 items = characters,

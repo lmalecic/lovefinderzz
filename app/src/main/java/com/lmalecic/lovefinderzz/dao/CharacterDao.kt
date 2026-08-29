@@ -23,4 +23,18 @@ interface CharacterDao {
         LIMIT 1
     """)
     fun observeDetails(characterId: Long): Flow<CharacterDetails?>
+
+    @Query("""
+        SELECT * FROM characters
+        WHERE favorite = 1
+        ORDER BY name COLLATE NOCASE
+    """)
+    fun observeFavorites(): Flow<List<CharacterEntity>>
+
+    @Query("""
+        UPDATE characters
+        SET favorite = :favorite
+        WHERE id = :characterId
+    """)
+    suspend fun setFavorite(characterId: Long, favorite: Boolean)
 }

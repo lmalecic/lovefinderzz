@@ -16,7 +16,11 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FabPosition
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -24,6 +28,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
@@ -86,24 +92,51 @@ fun CharacterPagerScreen(
         pageCount = { characters.size }
     )
 
-    HorizontalPager(
-        state = pagerState,
-        modifier = Modifier.fillMaxSize()
-    ) { page ->
-        val character = characters[page]
+    Scaffold(
+        modifier = Modifier.fillMaxSize(),
+        floatingActionButton = {
+            val currentCharacter = characters.getOrNull(pagerState.currentPage)
 
-        val detailsFlow = remember(character.id) {
-            viewModel.observeDetails(character.id)
-        }
+            if (currentCharacter != null) {
+                FloatingActionButton(
+                    onClick = {
+                        viewModel.setFavorite(currentCharacter.id, !currentCharacter.favorite)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(
+                            if (currentCharacter.favorite) R.drawable.ic_favorites
+                            else R.drawable.ic_outline_favorites
+                        ),
+                        contentDescription = null
+                    )
+                }
+            }
+        },
+        floatingActionButtonPosition = FabPosition.End,
+        containerColor = Color.Transparent
+    ) { innerPadding ->
+        HorizontalPager(
+            state = pagerState,
+            modifier = Modifier.fillMaxSize()
+                .padding(innerPadding),
+            pageSpacing = 32.dp
+        ) { page ->
+            val character = characters[page]
 
-        val details by detailsFlow.collectAsStateWithLifecycle(
-            initialValue = null
-        )
+            val detailsFlow = remember(character.id) {
+                viewModel.observeDetails(character.id)
+            }
 
-        if (details == null) {
-            CharacterDetailsEmptyContent()
-        } else {
-            CharacterDetailsContent(details = details!!, navController = navController)
+            val details by detailsFlow.collectAsStateWithLifecycle(
+                initialValue = null
+            )
+
+            if (details == null) {
+                CharacterDetailsEmptyContent()
+            } else {
+                CharacterDetailsContent(details = details!!, navController = navController)
+            }
         }
     }
 }
@@ -122,26 +155,24 @@ fun CharacterDetailsEmptyContent() {
 fun CharacterDetailsContent(details: CharacterDetails, navController: NavController) {
     LazyColumn(
         modifier = Modifier.fillMaxSize(),
-        contentPadding = PaddingValues(bottom = 16.dp),
+        contentPadding = PaddingValues(bottom = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        item(key = "image") {
-            Surface(
-                shape = RoundedCornerShape(16.dp)
-            ) {
-                AsyncImage(
-                    model = details.character.imageUrl,
-                    contentDescription = null,
-                    modifier = Modifier.aspectRatio(1f)
-                        .fillMaxWidth(),
-                )
-            }
-        }
-
         item(key = "title") {
             Text(
                 text = "Character — ${details.character.name}",
                 style = MaterialTheme.typography.titleLarge,
+                modifier = Modifier.padding(bottom = 8.dp)
+            )
+        }
+
+        item(key = "image") {
+            AsyncImage(
+                model = details.character.imageUrl,
+                contentDescription = null,
+                modifier = Modifier.aspectRatio(1f)
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp)),
             )
         }
 
@@ -149,6 +180,7 @@ fun CharacterDetailsContent(details: CharacterDetails, navController: NavControl
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
                 modifier = Modifier.fillMaxWidth()
+                    .padding(top = 8.dp)
             ) {
                 Detail(
                     labelText = stringResource(R.string.statusDetail)

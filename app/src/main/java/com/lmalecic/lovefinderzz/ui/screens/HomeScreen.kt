@@ -2,10 +2,15 @@ package com.lmalecic.lovefinderzz.ui.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,22 +27,33 @@ import com.lmalecic.lovefinderzz.R
 import com.lmalecic.lovefinderzz.handler.getGifEnabledLoader
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.theme.Typography
+import com.lmalecic.lovefinderzz.viewmodel.HomeViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
 data object HomeRoute: AppRoute
 
 @Composable
-fun HomeContent(modifier: Modifier = Modifier) {
+fun HomeScreen(
+    modifier: Modifier = Modifier,
+    viewModel: HomeViewModel = viewModel()
+) {
+
+}
+
+@Composable
+fun HomeContent(
+    modifier: Modifier = Modifier
+) {
     val context = LocalContext.current
 
     Column(
-        verticalArrangement = Arrangement.spacedBy(16.dp, alignment = Alignment.CenterVertically),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier.fillMaxSize()
-            .padding(32.dp, 24.dp)
     ) {
         Text(
             text = stringResource(R.string.home_title),
@@ -50,14 +66,25 @@ fun HomeContent(modifier: Modifier = Modifier) {
                 .build(),
             contentDescription = "Animated GIF",
             imageLoader = getGifEnabledLoader(context),
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(400f / 225f)
                 .clip(RoundedCornerShape(16.dp))
         )
 
         Text(
             text = stringResource(R.string.home_body),
-            style = TextStyle(fontStyle = FontStyle.Italic)
+            style = TextStyle(fontStyle = FontStyle.Italic),
+            modifier = Modifier.fillMaxWidth(),
+            textAlign = TextAlign.Center
         )
+
+        Text(
+            text = stringResource(R.string.remindersTitle),
+            style = MaterialTheme.typography.titleMedium
+        )
+
+        // TODO: Implement reminders and show them here
     }
 }
 

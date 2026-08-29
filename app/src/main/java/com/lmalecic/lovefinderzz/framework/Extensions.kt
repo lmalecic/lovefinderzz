@@ -5,11 +5,19 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Handler
 import android.os.Looper
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import androidx.core.content.getSystemService
 import androidx.preference.PreferenceManager
 import com.lmalecic.lovefinderzz.formatter.US_LONG_DATE
+import kotlinx.coroutines.delay
 import java.time.LocalDate
+import kotlin.time.Duration
 
 fun <T : Enum<T>> Enum<T>.toTitleCase(): String =
     this.name.lowercase().replaceFirstChar { it.uppercase() }
@@ -38,4 +46,24 @@ fun Context.isOnline(): Boolean {
 
 fun callDelayed(delay: Long, work: Runnable) {
     Handler(Looper.getMainLooper()).postDelayed(work, delay)
+}
+
+@Composable
+fun DelayedContent(
+    delay: Duration,
+    waitingContent: (@Composable () -> Unit)? = null,
+    content: @Composable () -> Unit
+) {
+    var finished by remember { mutableStateOf(false) }
+
+    LaunchedEffect(delay) {
+        delay(delay)
+        finished = true
+    }
+
+    if (finished) {
+        content()
+    } else {
+        waitingContent?.invoke()
+    }
 }

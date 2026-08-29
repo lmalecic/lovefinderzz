@@ -3,7 +3,6 @@ package com.lmalecic.lovefinderzz.dao
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
-import androidx.room.Query
 import androidx.room.Upsert
 import com.lmalecic.lovefinderzz.entity.CharacterEntity
 import com.lmalecic.lovefinderzz.entity.CharacterEpisodeCrossReference
