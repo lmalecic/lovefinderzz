@@ -101,7 +101,8 @@ fun LocationPagerScreen(
     ) { innerPadding ->
         HorizontalPager(
             state = pagerState,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(innerPadding),
             pageSpacing = 32.dp
         ) { page ->
@@ -151,11 +152,12 @@ fun LocationDetailsContent(details: LocationDetails, navController: NavControlle
         item(key = "details") {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(top = 8.dp)
             ) {
                 Detail(
-                    labelText = "Dimension",
+                    labelText = stringResource(R.string.dimensionDetail),
                     valueText = details.location.dimension.replaceFirstChar { it.uppercase() },
                     valueIconPainter = painterResource(R.drawable.ic_dimension)
                 )
@@ -169,7 +171,7 @@ fun LocationDetailsContent(details: LocationDetails, navController: NavControlle
 
         item(key = "residents-title") {
             Text(
-                text = "Residents",
+                text = stringResource(R.string.residents),
                 style = MaterialTheme.typography.bodyLarge.merge(
                     fontWeight = FontWeight.SemiBold
                 ),
@@ -192,7 +194,7 @@ fun LocationDetailsContent(details: LocationDetails, navController: NavControlle
         } else {
             item(key = "no-residents") {
                 Text(
-                    text = "This location has no residents",
+                    text = stringResource(R.string.no_residents),
                     style = MaterialTheme.typography.bodySmall.merge(
                         fontStyle = FontStyle.Italic
                     )
