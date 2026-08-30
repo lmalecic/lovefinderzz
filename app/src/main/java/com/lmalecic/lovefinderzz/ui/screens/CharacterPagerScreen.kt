@@ -30,12 +30,17 @@ import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -77,6 +82,8 @@ import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.extendedColors
 import com.lmalecic.lovefinderzz.ui.theme.getColor
 import com.lmalecic.lovefinderzz.viewmodel.CharactersViewModel
+import com.lmalecic.lovefinderzz.viewmodel.ImageSaveEvent
+import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
 import kotlin.math.roundToInt
@@ -111,8 +118,36 @@ fun CharacterPagerScreen(
         pageCount = { characters.size }
     )
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val snackbarScope = rememberCoroutineScope()
+
+    val permissionDeniedMessage = stringResource(R.string.image_save_storage_permission_denied)
+    val imageSavedMessage = stringResource(R.string.image_saved_to_gallery)
+    val imageSaveFailedMessage = stringResource(R.string.save_image_gallery_failed)
+
+    LaunchedEffect(viewModel) {
+        viewModel.imageSaveEvents.collect { event ->
+            when (event) {
+                is ImageSaveEvent.Saved -> snackbarHostState.showSnackbar(
+                    message = imageSavedMessage,
+                    withDismissAction = true,
+                    duration = SnackbarDuration.Short,
+                )
+
+                is ImageSaveEvent.Failed -> snackbarHostState.showSnackbar(
+                    message = imageSaveFailedMessage,
+                    withDismissAction = true,
+                    duration = SnackbarDuration.Long
+                )
+            }
+        }
+    }
+
     Scaffold(
         modifier = Modifier.fillMaxSize(),
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         floatingActionButton = {
             val currentCharacter = characters.getOrNull(pagerState.currentPage)
 
@@ -160,6 +195,15 @@ fun CharacterPagerScreen(
                     navController = navController,
                     onSaveToGallery = {
                         viewModel.saveImageToGallery(details!!.character.imageUrl, details!!.character.name)
+                    },
+                    onStoragePermissionDenied = {
+                        snackbarScope.launch {
+                            snackbarHostState.showSnackbar(
+                                message = permissionDeniedMessage,
+                                withDismissAction = true,
+                                duration = SnackbarDuration.Long
+                            )
+                        }
                     }
                 )
             }
@@ -181,7 +225,8 @@ fun CharacterDetailsEmptyContent() {
 fun CharacterDetailsContent(
     details: CharacterDetails,
     navController: NavController,
-    onSaveToGallery: () -> Unit
+    onSaveToGallery: () -> Unit = {},
+    onStoragePermissionDenied: () -> Unit = {}
 ) {
     val context = LocalContext.current
 
@@ -191,7 +236,7 @@ fun CharacterDetailsContent(
         if (granted) {
             onSaveToGallery()
         } else {
-            // TODO: Show snackbar explaining that saving was cancelled
+            onStoragePermissionDenied()
         }
     }
 
@@ -453,7 +498,6 @@ fun CharacterDetailsContentPreview() {
                 )
             ),
             navController = rememberNavController(),
-            onSaveToGallery = {}
         )
     }
 }

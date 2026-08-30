@@ -22,4 +22,7 @@
     <string name="dimensionDetail">Dimension</string>
     <string name="character_no_episode">This character doesn\'t appear in any episode</string>
     <string name="save_to_gallery">Save to Gallery</string>
+    <string name="image_saved_to_gallery">Image saved to Gallery.</string>
+    <string name="save_image_gallery_failed">Failed to save image to Gallery.</string>
+    <string name="image_save_storage_permission_denied">Storage permission denied, image not saved.</string>
 </resources>
