@@ -20,6 +20,7 @@ import com.lmalecic.lovefinderzz.R
 import com.lmalecic.lovefinderzz.entity.EpisodeEntity
 import com.lmalecic.lovefinderzz.ui.components.EpisodeCard
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import com.lmalecic.lovefinderzz.viewmodel.EpisodesViewModel
@@ -49,7 +50,8 @@ fun EpisodesContent(
     navController: NavHostController
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
+            .pageContentPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
@@ -58,7 +60,7 @@ fun EpisodesContent(
         )
 
         LazyColumn(
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(
                 items = episodes,

@@ -25,4 +25,8 @@
     <string name="image_saved_to_gallery">Image saved to Gallery.</string>
     <string name="save_image_gallery_failed">Failed to save image to Gallery.</string>
     <string name="image_save_storage_permission_denied">Storage permission denied, image not saved.</string>
+    <string name="featured_characters">Featured characters</string>
+    <string name="air_dateDetail">Air Date</string>
+    <string name="episodeDetail">Episode</string>
+    <string name="clear_rating">Clear rating</string>
 </resources>

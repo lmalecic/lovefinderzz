@@ -18,9 +18,25 @@ class EpisodesViewModel(application: Application) : AndroidViewModel(application
 
     fun observeDetails(episodeId: Long) = episodeDao.observeDetails(episodeId)
 
-    fun setFavorite(locationId: Long, favorite: Boolean) {
+    fun setFavorite(episodeId: Long, favorite: Boolean) {
         viewModelScope.launch {
-            episodeDao.setFavorite(locationId, favorite)
+            episodeDao.setFavorite(episodeId, favorite)
+        }
+    }
+
+    fun setRating(episodeId: Long, rating: Float) {
+        require(rating in 0.5f..5f) {
+            "Episode rating must be a float in between 0.5 and 5!"
+        }
+
+        viewModelScope.launch {
+            episodeDao.setRating(episodeId, rating)
+        }
+    }
+
+    fun clearRating(episodeId: Long) {
+        viewModelScope.launch {
+            episodeDao.clearRating(episodeId)
         }
     }
 }

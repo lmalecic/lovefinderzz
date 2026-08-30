@@ -30,6 +30,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import com.lmalecic.lovefinderzz.viewmodel.HomeViewModel
 import kotlinx.serialization.Serializable
@@ -54,6 +55,7 @@ fun HomeContent(
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
         modifier = modifier.fillMaxSize()
+            .pageContentPadding()
     ) {
         Text(
             text = stringResource(R.string.home_title),

@@ -108,7 +108,7 @@ fun LovefinderzzApp() {
                 startDestination = AppDestinations.entries.first().route,
                 modifier = Modifier.fillMaxSize()
                     .statusBarsPadding()
-                    .padding(24.dp, 12.dp, 24.dp, 0.dp)
+//                    .padding(24.dp, 12.dp, 24.dp, 0.dp)
             ) {
                 composable<HomeRoute> {
                     HomeContent()

@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -18,13 +19,19 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,7 +49,9 @@ import com.lmalecic.lovefinderzz.entity.Gender
 import com.lmalecic.lovefinderzz.formatter.toLocalizedString
 import com.lmalecic.lovefinderzz.ui.components.CharacterCard
 import com.lmalecic.lovefinderzz.ui.components.Detail
+import com.lmalecic.lovefinderzz.ui.components.StarRatingSlider
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.viewmodel.EpisodesViewModel
 import kotlinx.serialization.Serializable
@@ -122,7 +131,16 @@ fun EpisodePagerScreen(
             if (details == null) {
                 EpisodeDetailsEmptyContent()
             } else {
-                EpisodeDetailsContent(details = details!!, navController = navController)
+                EpisodeDetailsContent(
+                    details = details!!,
+                    navController = navController,
+                    onRatingCommitted = { rating ->
+                        viewModel.setRating(details!!.episode.id, rating)
+                    },
+                    onRatingCleared = {
+                        viewModel.clearRating(details!!.episode.id)
+                    }
+                )
             }
         }
     }
@@ -139,11 +157,25 @@ fun EpisodeDetailsEmptyContent() {
 }
 
 @Composable
-fun EpisodeDetailsContent(details: EpisodeDetails, navController: NavController) {
+fun EpisodeDetailsContent(
+    details: EpisodeDetails,
+    navController: NavController,
+    onRatingCommitted: (Float) -> Unit = {},
+    onRatingCleared: () -> Unit = {}
+) {
+    var selectedRating by rememberSaveable(details.episode.id, details.episode.rating) {
+        mutableFloatStateOf(details.episode.rating ?: 3f)
+    }
+
+    var isRated by rememberSaveable(details.episode.id, details.episode.rating) {
+        mutableStateOf(details.episode.rating != null)
+    }
+
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .pageContentPadding(),
         contentPadding = PaddingValues(bottom = 96.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        verticalArrangement = Arrangement.spacedBy(8.dp),
     ) {
         item(key = "title") {
             Text(
@@ -155,29 +187,68 @@ fun EpisodeDetailsContent(details: EpisodeDetails, navController: NavController)
         item(key = "details") {
             Column(
                 verticalArrangement = Arrangement.spacedBy(4.dp),
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier
+                    .fillMaxWidth()
                     .padding(top = 8.dp)
             ) {
                 Detail(
-                    labelText = "Episode",
+                    labelText = stringResource(R.string.episodeDetail),
                     valueText = details.episode.episode
                 )
 
                 Detail(
-                    labelText = "Air Date",
+                    labelText = stringResource(R.string.air_dateDetail),
                     valueText = details.episode.airDate.toLocalizedString(FormatStyle.LONG),
                     valueIconPainter = painterResource(R.drawable.ic_calendar)
                 )
             }
         }
 
+        item(key = "rating-title") {
+            Text(
+                text = "Personal rating",
+                style = MaterialTheme.typography.bodyLarge.merge(
+                    fontWeight = FontWeight.SemiBold
+                )
+            )
+        }
+
+        item (key = "rating") {
+            Column {
+                StarRatingSlider(
+                    value = selectedRating,
+                    isRated = isRated,
+                    onValueChange = { rating ->
+                        selectedRating = rating
+                        isRated = true
+                    },
+                    onValueChangeFinished = { rating ->
+                        onRatingCommitted(rating)
+                    }
+                )
+
+                if (isRated) {
+                    TextButton(
+                        modifier = Modifier.offset(x = (-12).dp),
+                        onClick = {
+                            isRated = false
+                            selectedRating = 3f
+                            onRatingCleared()
+                        },
+                    ) {
+                        Text(stringResource(R.string.clear_rating))
+                    }
+                }
+            }
+        }
+
         item(key = "characters-title") {
             Text(
-                text = "Featured characters",
+                text = stringResource(R.string.featured_characters),
                 style = MaterialTheme.typography.bodyLarge.merge(
                     fontWeight = FontWeight.SemiBold
                 ),
-                modifier = Modifier.padding(top = 8.dp)
+                modifier = Modifier.padding(top = if (isRated) 0.dp else 8.dp)
             )
         }
 

@@ -41,6 +41,7 @@ import com.lmalecic.lovefinderzz.entity.LocationEntity
 import com.lmalecic.lovefinderzz.ui.components.CharacterCard
 import com.lmalecic.lovefinderzz.ui.components.Detail
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.viewmodel.LocationsViewModel
 import kotlinx.serialization.Serializable
@@ -138,7 +139,8 @@ fun LocationDetailsEmptyContent() {
 @Composable
 fun LocationDetailsContent(details: LocationDetails, navController: NavController) {
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .pageContentPadding(),
         contentPadding = PaddingValues(bottom = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

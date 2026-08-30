@@ -37,4 +37,18 @@ interface EpisodeDao {
         WHERE id = :episodeId
     """)
     suspend fun setFavorite(episodeId: Long, favorite: Boolean)
+
+    @Query("""
+        UPDATE episodes
+        SET rating = :rating
+        WHERE id = :episodeId
+    """)
+    suspend fun setRating(episodeId: Long, rating: Float)
+
+    @Query("""
+        UPDATE episodes
+        SET rating = NULL
+        WHERE id = :episodeId
+    """)
+    suspend fun clearRating(episodeId: Long)
 }

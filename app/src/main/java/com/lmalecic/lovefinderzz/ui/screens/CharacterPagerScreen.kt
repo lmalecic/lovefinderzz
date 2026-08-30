@@ -77,6 +77,7 @@ import com.lmalecic.lovefinderzz.ui.components.Detail
 import com.lmalecic.lovefinderzz.ui.components.EpisodeCard
 import com.lmalecic.lovefinderzz.ui.icon_filled
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.provider.PressPositionProvider
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.extendedColors
@@ -241,7 +242,8 @@ fun CharacterDetailsContent(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier.fillMaxSize()
+            .pageContentPadding(),
         contentPadding = PaddingValues(bottom = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

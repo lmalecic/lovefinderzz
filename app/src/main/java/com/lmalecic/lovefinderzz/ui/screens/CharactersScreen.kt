@@ -22,6 +22,7 @@ import com.lmalecic.lovefinderzz.entity.CharacterStatus
 import com.lmalecic.lovefinderzz.entity.Gender
 import com.lmalecic.lovefinderzz.ui.components.CharacterCard
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import com.lmalecic.lovefinderzz.viewmodel.CharactersViewModel
@@ -50,7 +51,8 @@ fun CharactersContent(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
+            .pageContentPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(

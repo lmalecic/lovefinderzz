@@ -20,6 +20,7 @@ import com.lmalecic.lovefinderzz.R
 import com.lmalecic.lovefinderzz.entity.LocationEntity
 import com.lmalecic.lovefinderzz.ui.components.LocationCard
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
+import com.lmalecic.lovefinderzz.ui.pageContentPadding
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.theme.Typography
 import com.lmalecic.lovefinderzz.viewmodel.LocationsViewModel
@@ -48,7 +49,8 @@ fun LocationsContent(
     navController: NavHostController
 ) {
     Column(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier.fillMaxSize()
+            .pageContentPadding(),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
         Text(
