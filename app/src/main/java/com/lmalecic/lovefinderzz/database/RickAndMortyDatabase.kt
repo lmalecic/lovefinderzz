@@ -9,20 +9,23 @@ import androidx.room.TypeConverters
 import com.lmalecic.lovefinderzz.dao.CharacterDao
 import com.lmalecic.lovefinderzz.dao.EpisodeDao
 import com.lmalecic.lovefinderzz.dao.LocationDao
+import com.lmalecic.lovefinderzz.dao.ReminderDao
 import com.lmalecic.lovefinderzz.dao.SyncDao
 import com.lmalecic.lovefinderzz.entity.CharacterEntity
 import com.lmalecic.lovefinderzz.entity.CharacterEpisodeCrossReference
 import com.lmalecic.lovefinderzz.entity.EpisodeEntity
 import com.lmalecic.lovefinderzz.entity.LocationEntity
+import com.lmalecic.lovefinderzz.entity.ReminderEntity
 
 @Database(
     entities = [
         CharacterEntity::class,
         LocationEntity::class,
         EpisodeEntity::class,
-        CharacterEpisodeCrossReference::class
+        CharacterEpisodeCrossReference::class,
+        ReminderEntity::class
     ],
-    version = 3,
+    version = 4,
     exportSchema = true,
     autoMigrations = [
         AutoMigration(
@@ -32,6 +35,10 @@ import com.lmalecic.lovefinderzz.entity.LocationEntity
         AutoMigration(
             from = 2,
             to = 3,
+        ),
+        AutoMigration(
+            from = 3,
+            to = 4
         )
     ]
 )
@@ -42,6 +49,7 @@ abstract class RickAndMortyDatabase : RoomDatabase() {
     abstract fun characterDao(): CharacterDao
     abstract fun locationDao(): LocationDao
     abstract fun episodeDao(): EpisodeDao
+    abstract fun reminderDao(): ReminderDao
 
     companion object {
         @Volatile

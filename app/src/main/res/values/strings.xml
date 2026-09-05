@@ -15,7 +15,7 @@
     <string name="locationDetail">Location</string>
     <string name="unknown">Unknown</string>
     <string name="originDetail">Origin</string>
-    <string name="remindersTitle">Reminders</string>
+    <string name="upcomingRemindersTitle">Upcoming reminders</string>
     <string name="appears_in">Appears in</string>
     <string name="no_residents">This location has no residents</string>
     <string name="residents">Residents</string>
@@ -29,4 +29,18 @@
     <string name="air_dateDetail">Air Date</string>
     <string name="episodeDetail">Episode</string>
     <string name="clear_rating">Clear rating</string>
+    <string name="defaultReminderMessage">You told me to remind you about something.</string>
+    <string name="cancel">Cancel</string>
+    <string name="schedule">Schedule</string>
+    <string name="reminder_message_placeholder">Reminder message (optional)</string>
+    <string name="new_reminder">New reminder</string>
+    <string name="confirm">Confirm</string>
+    <string name="notification_permission_denied">Notification permission denied</string>
+    <string name="exact_alarm_access_was_not_granted">Exact alarm access was not granted</string>
+    <string name="reminder_scheduled">Reminder scheduled</string>
+    <string name="reminder_schedule_failed_message">Could not schedule reminder</string>
+    <string name="set_reminder">Set reminder</string>
+    <string name="time">Time:</string>
+    <string name="date">Date:</string>
+    <string name="from">From:</string>
 </resources>

@@ -29,6 +29,7 @@ import androidx.compose.material3.FabPosition
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarDuration
 import androidx.compose.material3.SnackbarHost
@@ -71,10 +72,13 @@ import com.lmalecic.lovefinderzz.entity.CharacterStatus
 import com.lmalecic.lovefinderzz.entity.EpisodeEntity
 import com.lmalecic.lovefinderzz.entity.Gender
 import com.lmalecic.lovefinderzz.framework.toTitleCase
+import com.lmalecic.lovefinderzz.ui.ViewContext
 import com.lmalecic.lovefinderzz.ui.components.Banner
 import com.lmalecic.lovefinderzz.ui.components.BannerSize
 import com.lmalecic.lovefinderzz.ui.components.Detail
 import com.lmalecic.lovefinderzz.ui.components.EpisodeCard
+import com.lmalecic.lovefinderzz.ui.components.ReminderDialog
+import com.lmalecic.lovefinderzz.ui.components.ReminderDraft
 import com.lmalecic.lovefinderzz.ui.icon_filled
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.pageContentPadding
@@ -84,6 +88,8 @@ import com.lmalecic.lovefinderzz.ui.theme.extendedColors
 import com.lmalecic.lovefinderzz.ui.theme.getColor
 import com.lmalecic.lovefinderzz.viewmodel.CharactersViewModel
 import com.lmalecic.lovefinderzz.viewmodel.ImageSaveEvent
+import com.lmalecic.lovefinderzz.viewmodel.ReminderEvent
+import com.lmalecic.lovefinderzz.viewmodel.ReminderViewModel
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 import java.time.LocalDate
@@ -94,11 +100,17 @@ data class CharacterPagerRoute(
     val characterId: Long
 ) : AppRoute
 
+private data class PendingReminder(
+    val characterId: Long,
+    val draft: ReminderDraft
+)
+
 @Composable
 fun CharacterPagerScreen(
     initialCharacterId: Long,
     navController: NavHostController,
-    viewModel: CharactersViewModel = viewModel()
+    viewModel: CharactersViewModel = viewModel(),
+    reminderViewModel: ReminderViewModel = viewModel()
 ) {
     val characters by viewModel.characters.collectAsStateWithLifecycle(
         initialValue = emptyList()
@@ -140,6 +152,79 @@ fun CharacterPagerScreen(
                     withDismissAction = true,
                     duration = SnackbarDuration.Long
                 )
+            }
+        }
+    }
+
+    val context = LocalContext.current
+
+    var reminderCharacter by remember { mutableStateOf<CharacterEntity?>(null) }
+    var pendingReminder by remember { mutableStateOf<PendingReminder?>(null) }
+
+    val notificationPermissionDeniedMessage = stringResource(R.string.notification_permission_denied)
+    val exactAlarmPermissionDeniedMessage = stringResource(R.string.exact_alarm_access_was_not_granted)
+    val reminderScheduledMessage = stringResource(R.string.reminder_scheduled)
+    val reminderScheduleFailedMessage = stringResource(R.string.reminder_schedule_failed_message)
+
+    val scheduleReminder: (PendingReminder) -> Unit = {
+        reminderViewModel.scheduleNotification(
+            characterId = it.characterId,
+            date = it.draft.date,
+            time = it.draft.time,
+            message = it.draft.message
+        )
+    }
+
+    val notificationPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        if (granted) {
+            pendingReminder?.let(scheduleReminder)
+        } else {
+            snackbarScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = notificationPermissionDeniedMessage
+                )
+            }
+        }
+    }
+
+    val exactAlarmLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) {
+        if (reminderViewModel.canScheduleExactAlarms()) {
+            pendingReminder?.let(scheduleReminder)
+        } else {
+            snackbarScope.launch {
+                snackbarHostState.showSnackbar(
+                    message = exactAlarmPermissionDeniedMessage
+                )
+            }
+        }
+    }
+
+    LaunchedEffect(reminderViewModel) {
+        reminderViewModel.events.collect { event ->
+            when (event) {
+                is ReminderEvent.Created -> {
+                    pendingReminder = null
+                    reminderCharacter = null
+
+                    snackbarHostState.showSnackbar(
+                        message = reminderScheduledMessage
+                    )
+                }
+
+                ReminderEvent.ExactAlarmAccessRequired -> {
+                    reminderViewModel.exactAlarmAccessIntent()?.let(exactAlarmLauncher::launch)
+                }
+
+                is ReminderEvent.Failed -> {
+                    snackbarHostState.showSnackbar(
+                        message = event.reason ?: reminderScheduleFailedMessage,
+                        withDismissAction = true
+                    )
+                }
             }
         }
     }
@@ -205,10 +290,41 @@ fun CharacterPagerScreen(
                                 duration = SnackbarDuration.Long
                             )
                         }
+                    },
+                    onRemindMe = {
+                        reminderCharacter = details!!.character
                     }
                 )
             }
         }
+    }
+
+    reminderCharacter?.let { character ->
+        ReminderDialog(
+            viewContext = ViewContext.CREATE,
+            characterName = character.name,
+            onDismiss = {
+                reminderCharacter = null
+                pendingReminder = null
+            },
+            onSave = { draft ->
+                val reminder = PendingReminder(
+                    characterId = character.id,
+                    draft = draft
+                )
+
+                pendingReminder = reminder
+
+                val notificationPermissionGranted = Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU
+                        || ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+
+                if (notificationPermissionGranted) {
+                    scheduleReminder(reminder)
+                } else {
+                    notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
+            }
+        )
     }
 }
 
@@ -227,7 +343,8 @@ fun CharacterDetailsContent(
     details: CharacterDetails,
     navController: NavController,
     onSaveToGallery: () -> Unit = {},
-    onStoragePermissionDenied: () -> Unit = {}
+    onStoragePermissionDenied: () -> Unit = {},
+    onRemindMe: () -> Unit = {},
 ) {
     val context = LocalContext.current
 
@@ -242,7 +359,8 @@ fun CharacterDetailsContent(
     }
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .pageContentPadding(),
         contentPadding = PaddingValues(bottom = 96.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -284,6 +402,15 @@ fun CharacterDetailsContent(
                     }
                 }
             )
+        }
+
+        item(key = "set-reminder") {
+            OutlinedButton(
+                onClick = onRemindMe,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(stringResource(R.string.set_reminder))
+            }
         }
 
         item(key = "details") {

@@ -30,6 +30,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import com.lmalecic.lovefinderzz.reminder.ReminderNotifications
 import com.lmalecic.lovefinderzz.ui.theme.LovefinderzzTheme
 import com.lmalecic.lovefinderzz.ui.navigation.AppRoute
 import com.lmalecic.lovefinderzz.ui.screens.CharacterPagerRoute
@@ -42,6 +43,7 @@ import com.lmalecic.lovefinderzz.ui.screens.EpisodesRoute
 import com.lmalecic.lovefinderzz.ui.screens.EpisodesScreen
 import com.lmalecic.lovefinderzz.ui.screens.HomeRoute
 import com.lmalecic.lovefinderzz.ui.screens.HomeContent
+import com.lmalecic.lovefinderzz.ui.screens.HomeScreen
 import com.lmalecic.lovefinderzz.ui.screens.LocationPagerRoute
 import com.lmalecic.lovefinderzz.ui.screens.LocationPagerScreen
 import com.lmalecic.lovefinderzz.ui.screens.LocationsRoute
@@ -51,6 +53,8 @@ import com.lmalecic.lovefinderzz.ui.screens.StartupScreen
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ReminderNotifications.createChannel(this)
+
         enableEdgeToEdge()
         setContent {
             LovefinderzzTheme {
@@ -111,7 +115,7 @@ fun LovefinderzzApp() {
 //                    .padding(24.dp, 12.dp, 24.dp, 0.dp)
             ) {
                 composable<HomeRoute> {
-                    HomeContent()
+                    HomeScreen()
                 }
 
                 composable<CharactersRoute> {
